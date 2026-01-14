@@ -9,11 +9,13 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 
 // Middleware
 app.use(cors())
 app.use(bodyParser.json())
+
+app.use(express.static(path.join(__dirname, "dist")))
 
 const db = new Database(path.join(__dirname, "ledger.db"))
 
@@ -126,6 +128,12 @@ app.post("/api/reflections/personal", (req, res) => {
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" })
+})
+
+app.get("*", (req, res) => {
+  if (!req.path.startsWith("/api")) {
+    res.sendFile(path.join(__dirname, "dist", "index.html"))
+  }
 })
 
 app.listen(PORT, () => {

@@ -40,3 +40,5 @@ next-env.d.ts
 ledger.db
 productivity.db
 *.db
+
+.vercel
